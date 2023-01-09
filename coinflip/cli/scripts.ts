@@ -60,8 +60,11 @@ const main = async () => {
     // const globalPool: GlobalPool = await getGlobalState();
     // console.log("GlobalPool Admin =", globalPool.superAdmin.toBase58(), globalPool.totalRound.toNumber());
 
-    // await initUserPool(payer.publicKey);
-    // await playGame(provider.publicKey, 1, 0.1);
+    // await initializeUserPool(provider.publicKey);
+
+    const userPool: PlayerPool = await getUserPoolState(provider.publicKey);
+    console.log(userPool.round, userPool.winTimes, userPool.gameData);
+    await playGame(provider.publicKey, 0, 1);
     // await claim(provider.publicKey);
     // await withDraw(payer.publicKey, 0.5);
     // console.log(await getAllTransactions(program.programId));
