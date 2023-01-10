@@ -56,15 +56,16 @@ const main = async () => {
     console.log('RewardVault: ', rewardVault.toBase58());
 
     // await initProject();
+    // await update(new PublicKey('Am9xhPPVCfDZFDabcGgmQ8GTMdsbqEt1qVXbyhTxybAp'), 3);
 
-    // const globalPool: GlobalPool = await getGlobalState();
-    // console.log("GlobalPool Admin =", globalPool.superAdmin.toBase58(), globalPool.totalRound.toNumber());
+    const globalPool: GlobalPool = await getGlobalState();
+    console.log("GlobalPool Admin =", globalPool.superAdmin.toBase58(), globalPool.totalRound.toNumber(), globalPool.loyaltyWallet.toBase58(), globalPool.loyaltyFee.toNumber());
 
     // await initializeUserPool(provider.publicKey);
 
-    const userPool: PlayerPool = await getUserPoolState(provider.publicKey);
-    console.log(userPool.round, userPool.winTimes, userPool.gameData);
-    await playGame(provider.publicKey, 0, 1);
+    // const userPool: PlayerPool = await getUserPoolState(provider.publicKey);
+    // console.log(userPool.round, userPool.winTimes, userPool.gameData);
+    // await playGame(provider.publicKey, 0, 1);
     // await claim(provider.publicKey);
     // await withDraw(payer.publicKey, 0.5);
     // console.log(await getAllTransactions(program.programId));

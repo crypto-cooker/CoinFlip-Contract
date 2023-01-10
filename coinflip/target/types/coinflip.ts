@@ -70,6 +70,12 @@ export type Coinflip = {
       ],
       "args": [
         {
+          "name": "newAdmin",
+          "type": {
+            "option": "publicKey"
+          }
+        },
+        {
           "name": "loyaltyFee",
           "type": "u64"
         }
@@ -99,6 +105,11 @@ export type Coinflip = {
         {
           "name": "rewardVault",
           "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "loyaltyWallet",
+          "isMut": false,
           "isSigner": false
         },
         {
@@ -355,6 +366,12 @@ export const IDL: Coinflip = {
       ],
       "args": [
         {
+          "name": "newAdmin",
+          "type": {
+            "option": "publicKey"
+          }
+        },
+        {
           "name": "loyaltyFee",
           "type": "u64"
         }
@@ -384,6 +401,11 @@ export const IDL: Coinflip = {
         {
           "name": "rewardVault",
           "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "loyaltyWallet",
+          "isMut": false,
           "isSigner": false
         },
         {

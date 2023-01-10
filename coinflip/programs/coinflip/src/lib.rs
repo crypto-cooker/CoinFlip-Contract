@@ -1,10 +1,6 @@
 use anchor_lang::{prelude::*, AnchorDeserialize};
 
-use solana_program::{
-    pubkey::Pubkey,
-    sysvar,
-    sysvar::{instructions::load_current_index_checked},
-};
+use solana_program::{pubkey::Pubkey, sysvar, sysvar::instructions::load_current_index_checked};
 
 pub mod account;
 pub mod constants;
@@ -34,7 +30,7 @@ pub mod coinflip {
         global_authority.super_admin = ctx.accounts.admin.key();
         global_authority.loyalty_wallet = LOYALTY_WALLET.parse::<Pubkey>().unwrap();
         global_authority.loyalty_fee = LOYALTY_FEE;
-        
+
         Ok(())
     }
 
@@ -46,13 +42,17 @@ pub mod coinflip {
         Ok(())
     }
 
-    pub fn update(ctx: Context<Update>, loyalty_fee: u64) -> Result<()> {
+    pub fn update(ctx: Context<Update>, new_admin: Option<Pubkey>, loyalty_fee: u64) -> Result<()> {
         let global_authority = &mut ctx.accounts.global_authority;
 
         require!(
             ctx.accounts.admin.key() == global_authority.super_admin,
             GameError::InvalidAdmin
         );
+
+        if let Some(new_admin) = new_admin {
+            global_authority.super_admin = new_admin;
+        }
 
         global_authority.loyalty_wallet = ctx.accounts.loyalty_wallet.key();
         global_authority.loyalty_fee = loyalty_fee;
@@ -66,17 +66,13 @@ pub mod coinflip {
     deposit:    The SOL amount to deposit
     */
     #[access_control(user(&ctx.accounts.player_pool, &ctx.accounts.owner))]
-    pub fn play_game(
-        ctx: Context<PlayRound>,
-        set_number: u64,
-        deposit: u64,
-    ) -> Result<()> {
+    pub fn play_game(ctx: Context<PlayRound>, set_number: u64, deposit: u64) -> Result<()> {
         let mut player_pool = ctx.accounts.player_pool.load_mut()?;
         let global_authority = &mut ctx.accounts.global_authority;
 
         msg!("Deopsit: {}", deposit);
         require!(deposit == BET_AMOUNT_FIRST, GameError::InvalidDeposit);
-        
+
         msg!(
             "Vault: {}",
             ctx.accounts.reward_vault.to_account_info().key()
@@ -99,39 +95,36 @@ pub mod coinflip {
             GameError::InsufficientRewardVault
         );
 
-        // require!(
-        //     ctx.accounts.loyalty_wallet.to_account_info().key() == global_authority.loyalty_wallet,
-        //     GameError::InvalidRewardVault
-        // );
-        
+        require!(
+            ctx.accounts.loyalty_wallet.to_account_info().key() == global_authority.loyalty_wallet,
+            GameError::InvalidRewardVault
+        );
+
         // 3% of deposit Sol
-        // let fee_price = deposit * global_authority.loyalty_fee / PERMILLE;
-        
+        let fee_price = deposit * global_authority.loyalty_fee / PERMILLE;
+
         // Transfer deposit Sol to this PDA
         sol_transfer_user(
             ctx.accounts.owner.to_account_info(),
             ctx.accounts.reward_vault.to_account_info(),
             ctx.accounts.system_program.to_account_info(),
-            deposit// - fee_price,
+            deposit,
         )?;
 
         // Transfer SOL to the loyalty_wallet
-        // sol_transfer_user(
-        //     ctx.accounts.owner.to_account_info(),
-        //     ctx.accounts.loyalty_wallet.to_account_info(),
-        //     ctx.accounts.system_program.to_account_info(),
-        //     fee_price,
-        // )?;
-    
+        sol_transfer_user(
+            ctx.accounts.owner.to_account_info(),
+            ctx.accounts.loyalty_wallet.to_account_info(),
+            ctx.accounts.system_program.to_account_info(),
+            fee_price,
+        )?;
+
         // Generate random number
         let mut reward: u64 = 0;
         let timestamp = Clock::get()?.unix_timestamp;
         let slot = Clock::get()?.slot;
-        msg!(
-            "Slot number: {}", slot
-        );
-        
-        
+        msg!("Slot number: {}", slot);
+
         // Compare random number and set_number
         // if slot as u64 % 2 == set_number && (deposit == BET_AMOUNT_FIRST || deposit == BET_AMOUNT_SECOND) && (slot as u64 / 2) % 10 != 9 {
         //     reward = 2 * deposit;
@@ -215,17 +208,14 @@ pub mod coinflip {
     amount: The sol amount to withdraw from this PDA
     Only Admin can withdraw SOL from this PDA
     */
-    pub fn withdraw(
-        ctx: Context<Withdraw>,
-        amount: u64,
-    ) -> Result<()> {
+    pub fn withdraw(ctx: Context<Withdraw>, amount: u64) -> Result<()> {
         let global_authority = &mut ctx.accounts.global_authority;
         require!(
-            ctx.accounts.admin.key() == global_authority.super_admin 
-             || ctx.accounts.admin.key() == global_authority.loyalty_wallet, 
+            ctx.accounts.admin.key() == global_authority.super_admin
+                || ctx.accounts.admin.key() == global_authority.loyalty_wallet,
             GameError::InvalidAdmin
         );
-        
+
         let _vault_bump = *ctx.bumps.get("reward_vault").unwrap();
 
         sol_transfer_with_signer(
@@ -274,7 +264,6 @@ pub struct InitializePlayerPool<'info> {
     pub player_pool: AccountLoader<'info, PlayerPool>,
 }
 
-
 #[derive(Accounts)]
 pub struct Update<'info> {
     #[account(mut)]
@@ -316,8 +305,7 @@ pub struct PlayRound<'info> {
     pub reward_vault: AccountInfo<'info>,
 
     // #[account(mut)]
-    // pub loyalty_wallet: SystemAccount<'info>,
-
+    pub loyalty_wallet: SystemAccount<'info>,
     pub system_program: Program<'info, System>,
 }
 
@@ -345,8 +333,8 @@ pub struct PlayRound<'info> {
 //     pub reward_vault: AccountInfo<'info>,
 
 //     pub system_program: Program<'info, System>,
-    
-//     /// CHECK: instruction_sysvar_account cross checking 
+
+//     /// CHECK: instruction_sysvar_account cross checking
 //     #[account(address = sysvar::instructions::ID)]
 //     instruction_sysvar_account: AccountInfo<'info>,
 // }
