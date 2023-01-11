@@ -56,7 +56,7 @@ const main = async () => {
     console.log('RewardVault: ', rewardVault.toBase58());
 
     // await initProject();
-    // await update(new PublicKey('Am9xhPPVCfDZFDabcGgmQ8GTMdsbqEt1qVXbyhTxybAp'), 3);
+    // await update(new PublicKey('Am9xhPPVCfDZFDabcGgmQ8GTMdsbqEt1qVXbyhTxybAp'), 3, new PublicKey('Am9xhPPVCfDZFDabcGgmQ8GTMdsbqEt1qVXbyhTxybAp'));
 
     const globalPool: GlobalPool = await getGlobalState();
     console.log("GlobalPool Admin =", globalPool.superAdmin.toBase58(), globalPool.totalRound.toNumber(), globalPool.loyaltyWallet.toBase58(), globalPool.loyaltyFee.toNumber());
@@ -65,7 +65,7 @@ const main = async () => {
 
     // const userPool: PlayerPool = await getUserPoolState(provider.publicKey);
     // console.log(userPool.round, userPool.winTimes, userPool.gameData);
-    // await playGame(provider.publicKey, 0, 1);
+    await playGame(provider.publicKey, 0, 1);
     // await claim(provider.publicKey);
     // await withDraw(payer.publicKey, 0.5);
     // console.log(await getAllTransactions(program.programId));
@@ -145,13 +145,15 @@ export const initializeUserPool = async (
 
 export const update = async (
     loyaltyWallet: PublicKey,
-    loyatyFee: number
+    loyatyFee: number,
+    newAdmin?: PublicKey,
 ) => {
    
     const tx = await updateTx(
         provider.publicKey,
         loyaltyWallet,
-        loyatyFee
+        loyatyFee,
+        newAdmin,
     );
     const txId = await provider.sendAndConfirm(tx, [], {
         commitment: "confirmed",
@@ -261,7 +263,8 @@ export const initUserPoolTx = async (
 export const updateTx = async (
     userAddress: PublicKey,
     loyaltyWallet: PublicKey,
-    loyatyFee: number
+    loyatyFee: number,
+    newAdmin?: PublicKey,
 ) => {
     const [globalAuthority, bump] = await PublicKey.findProgramAddress(
         [Buffer.from(GLOBAL_AUTHORITY_SEED)],
@@ -271,6 +274,7 @@ export const updateTx = async (
     let tx = new Transaction();
 
     tx.add(program.instruction.update(
+        newAdmin ?? null,
         new anchor.BN(loyatyFee*10), {
         accounts: {
             admin: userAddress,
@@ -306,7 +310,7 @@ export const createPlayGameTx = async (userAddress: PublicKey, setNum: number, d
     );
     console.log(playerPoolKey.toBase58());
 
-    // const state = await getGlobalState();
+    const state = await getGlobalState();
 
     let tx = new Transaction();
     let poolAccount = await solConnection.getAccountInfo(playerPoolKey);
@@ -323,7 +327,7 @@ export const createPlayGameTx = async (userAddress: PublicKey, setNum: number, d
             playerPool: playerPoolKey,
             globalAuthority,
             rewardVault: rewardVault,
-            // loyaltyWallet: state.loyaltyWallet,
+            loyaltyWallet: state.loyaltyWallet,
             systemProgram: SystemProgram.programId,
         },
         signers: [],

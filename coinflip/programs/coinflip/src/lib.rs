@@ -304,7 +304,7 @@ pub struct PlayRound<'info> {
     /// CHECK: This is not dangerous because we don't read or write from this account
     pub reward_vault: AccountInfo<'info>,
 
-    // #[account(mut)]
+    #[account(mut)]
     pub loyalty_wallet: SystemAccount<'info>,
     pub system_program: Program<'info, System>,
 }

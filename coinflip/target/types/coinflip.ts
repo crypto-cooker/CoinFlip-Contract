@@ -109,7 +109,7 @@ export type Coinflip = {
         },
         {
           "name": "loyaltyWallet",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false
         },
         {
@@ -405,7 +405,7 @@ export const IDL: Coinflip = {
         },
         {
           "name": "loyaltyWallet",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false
         },
         {
