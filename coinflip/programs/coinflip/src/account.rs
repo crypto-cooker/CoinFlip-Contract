@@ -60,10 +60,10 @@ impl PlayerPool {
         self.game_data.set_num = num;
         self.game_data.rand = rand;
         self.round += 1;
+        self.claimable_reward = 1;
         if reward > 0 {
             self.win_times += 1;
             self.received_reward += reward;
-            // self.claimable_reward += reward;
         }
     }
 }

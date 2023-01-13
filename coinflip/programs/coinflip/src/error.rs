@@ -16,4 +16,8 @@ pub enum GameError {
     InsufficientUserBalance,
     #[msg("Invalid Deposit Amount")]
     InvalidDeposit,
+    #[msg("There is no pending reward by played round")]
+    NoPendingRewardExist,
+    #[msg("Should claim pending reward before play new round")]
+    NeedClaimPendingReward,
 }

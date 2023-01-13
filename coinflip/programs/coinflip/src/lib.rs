@@ -73,6 +73,11 @@ pub mod coinflip {
         msg!("Deopsit: {}", deposit);
         require!(deposit == BET_AMOUNT_FIRST, GameError::InvalidDeposit);
 
+        require!(
+            player_pool.claimable_reward == 0,
+            GameError::NeedClaimPendingReward
+        );
+
         msg!(
             "Vault: {}",
             ctx.accounts.reward_vault.to_account_info().key()
@@ -151,19 +156,19 @@ pub mod coinflip {
 
         global_authority.total_round += 1;
 
-        if reward > 0 {
-            let vault_bump = *ctx.bumps.get("reward_vault").unwrap();
-            // Transfer SOL to the winner from the PDA
-            sol_transfer_with_signer(
-                ctx.accounts.reward_vault.to_account_info(),
-                ctx.accounts.owner.to_account_info(),
-                ctx.accounts.system_program.to_account_info(),
-                &[&[VAULT_AUTHORITY_SEED.as_ref(), &[vault_bump]]],
-                reward,
-            )?;
-            // player_pool.game_data.reward_amount = 0;
-            // player_pool.claimable_reward = 0;
-        }
+        // if reward > 0 {
+        //     let vault_bump = *ctx.bumps.get("reward_vault").unwrap();
+        //     // Transfer SOL to the winner from the PDA
+        //     sol_transfer_with_signer(
+        //         ctx.accounts.reward_vault.to_account_info(),
+        //         ctx.accounts.owner.to_account_info(),
+        //         ctx.accounts.system_program.to_account_info(),
+        //         &[&[VAULT_AUTHORITY_SEED.as_ref(), &[vault_bump]]],
+        //         reward,
+        //     )?;
+        //     // player_pool.game_data.reward_amount = 0;
+        //     // player_pool.claimable_reward = 0;
+        // }
 
         Ok(())
     }
@@ -171,36 +176,34 @@ pub mod coinflip {
     /**
     The claim Reward function after playing
     */
-    // #[access_control(user(&ctx.accounts.player_pool, &ctx.accounts.owner))]
-    // pub fn claim_reward(
-    //     ctx: Context<ClaimReward>,
-    // ) -> Result<()> {
-    //     let instruction_sysvar_account = ctx.accounts.instruction_sysvar_account.to_account_info();
-    //     let index = load_current_index_checked(&instruction_sysvar_account).unwrap();
-    //     require!(index == 0, GameError::InvalidClaim);
+    #[access_control(user(&ctx.accounts.player_pool, &ctx.accounts.player))]
+    pub fn claim_reward(ctx: Context<ClaimReward>) -> Result<()> {
+        let _vault_bump = *ctx.bumps.get("reward_vault").unwrap();
 
-    //     let _vault_bump = *ctx.bumps.get("reward_vault").unwrap();
-
-    //     let mut player_pool = ctx.accounts.player_pool.load_mut()?;
-    //     let reward = player_pool.claimable_reward;
-    //     require!(
-    //         ctx.accounts.reward_vault.to_account_info().lamports() > reward,
-    //         GameError::InsufficientRewardVault
-    //     );
-    //     if reward > 0 {
-    //         // Transfer SOL to the winner from the PDA
-    //         sol_transfer_with_signer(
-    //             ctx.accounts.reward_vault.to_account_info(),
-    //             ctx.accounts.owner.to_account_info(),
-    //             ctx.accounts.system_program.to_account_info(),
-    //             &[&[VAULT_AUTHORITY_SEED.as_ref(), &[_vault_bump]]],
-    //             reward,
-    //         )?;
-    //         player_pool.game_data.reward_amount = 0;
-    //         player_pool.claimable_reward = 0;
-    //     }
-    //     Ok(())
-    // }
+        let mut player_pool = ctx.accounts.player_pool.load_mut()?;
+        require!(
+            player_pool.claimable_reward == 1,
+            GameError::NoPendingRewardExist
+        );
+        let reward = player_pool.game_data.reward_amount;
+        require!(
+            ctx.accounts.reward_vault.to_account_info().lamports() > reward,
+            GameError::InsufficientRewardVault
+        );
+        if reward > 0 {
+            // Transfer SOL to the winner from the PDA
+            sol_transfer_with_signer(
+                ctx.accounts.reward_vault.to_account_info(),
+                ctx.accounts.player.to_account_info(),
+                ctx.accounts.system_program.to_account_info(),
+                &[&[VAULT_AUTHORITY_SEED.as_ref(), &[_vault_bump]]],
+                reward,
+            )?;
+            player_pool.game_data.reward_amount = 0;
+        }
+        player_pool.claimable_reward = 0;
+        Ok(())
+    }
 
     /**
     Withdraw function to withdraw SOL from the PDA with amount
@@ -309,35 +312,34 @@ pub struct PlayRound<'info> {
     pub system_program: Program<'info, System>,
 }
 
-// #[derive(Accounts)]
-// pub struct ClaimReward<'info> {
-//     #[account(mut)]
-//     pub owner: Signer<'info>,
+#[derive(Accounts)]
+pub struct ClaimReward<'info> {
+    #[account(mut)]
+    pub payer: Signer<'info>,
 
-//     #[account(mut)]
-//     pub player_pool: AccountLoader<'info, PlayerPool>,
+    #[account(mut)]
+    pub player: SystemAccount<'info>,
 
-//     #[account(
-//         mut,
-//         seeds = [GLOBAL_AUTHORITY_SEED.as_ref()],
-//         bump,
-//     )]
-//     pub global_authority: Box<Account<'info, GlobalPool>>,
+    #[account(mut)]
+    pub player_pool: AccountLoader<'info, PlayerPool>,
 
-//     #[account(
-//         mut,
-//         seeds = [VAULT_AUTHORITY_SEED.as_ref()],
-//         bump,
-//     )]
-//     /// CHECK: This is not dangerous because we don't read or write from this account
-//     pub reward_vault: AccountInfo<'info>,
+    #[account(
+        mut,
+        seeds = [GLOBAL_AUTHORITY_SEED.as_ref()],
+        bump,
+    )]
+    pub global_authority: Box<Account<'info, GlobalPool>>,
 
-//     pub system_program: Program<'info, System>,
+    #[account(
+        mut,
+        seeds = [VAULT_AUTHORITY_SEED.as_ref()],
+        bump,
+    )]
+    /// CHECK: This is not dangerous because we don't read or write from this account
+    pub reward_vault: AccountInfo<'info>,
 
-//     /// CHECK: instruction_sysvar_account cross checking
-//     #[account(address = sysvar::instructions::ID)]
-//     instruction_sysvar_account: AccountInfo<'info>,
-// }
+    pub system_program: Program<'info, System>,
+}
 
 #[derive(Accounts)]
 pub struct Withdraw<'info> {

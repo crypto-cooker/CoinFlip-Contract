@@ -130,9 +130,47 @@ export type Coinflip = {
       ]
     },
     {
+      "name": "claimReward",
+      "docs": [
+        "The claim Reward function after playing"
+      ],
+      "accounts": [
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "player",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "playerPool",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "globalAuthority",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "rewardVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
       "name": "withdraw",
       "docs": [
-        "The claim Reward function after playing",
         "Withdraw function to withdraw SOL from the PDA with amount\n    Args:\n    amount: The sol amount to withdraw from this PDA\n    Only Admin can withdraw SOL from this PDA"
       ],
       "accounts": [
@@ -290,6 +328,16 @@ export type Coinflip = {
       "code": 6006,
       "name": "InvalidDeposit",
       "msg": "Invalid Deposit Amount"
+    },
+    {
+      "code": 6007,
+      "name": "NoPendingRewardExist",
+      "msg": "There is no pending reward by played round"
+    },
+    {
+      "code": 6008,
+      "name": "NeedClaimPendingReward",
+      "msg": "Should claim pending reward before play new round"
     }
   ]
 };
@@ -426,9 +474,47 @@ export const IDL: Coinflip = {
       ]
     },
     {
+      "name": "claimReward",
+      "docs": [
+        "The claim Reward function after playing"
+      ],
+      "accounts": [
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "player",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "playerPool",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "globalAuthority",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "rewardVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
       "name": "withdraw",
       "docs": [
-        "The claim Reward function after playing",
         "Withdraw function to withdraw SOL from the PDA with amount\n    Args:\n    amount: The sol amount to withdraw from this PDA\n    Only Admin can withdraw SOL from this PDA"
       ],
       "accounts": [
@@ -586,6 +672,16 @@ export const IDL: Coinflip = {
       "code": 6006,
       "name": "InvalidDeposit",
       "msg": "Invalid Deposit Amount"
+    },
+    {
+      "code": 6007,
+      "name": "NoPendingRewardExist",
+      "msg": "There is no pending reward by played round"
+    },
+    {
+      "code": 6008,
+      "name": "NeedClaimPendingReward",
+      "msg": "Should claim pending reward before play new round"
     }
   ]
 };

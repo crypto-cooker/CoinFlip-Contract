@@ -66,7 +66,7 @@ const main = async () => {
     // const userPool: PlayerPool = await getUserPoolState(provider.publicKey);
     // console.log(userPool.round, userPool.winTimes, userPool.gameData);
     await playGame(provider.publicKey, 0, 1);
-    // await claim(provider.publicKey);
+    await claim(provider.publicKey, provider.publicKey);
     // await withDraw(payer.publicKey, 0.5);
     // console.log(await getAllTransactions(program.programId));
     // console.log(await getDataFromSignature('2FHN7zfuFPzTByeH9FVnnAc393AtipiuVwQfSXxyKSGvsCq1KjtqZBnw55fN6fPDvrxRr6xW1DHb4XSBpfAEyzpv'));
@@ -191,10 +191,12 @@ export const playGame = async (
 }
 
 export const claim = async (
-    userAddress: PublicKey
+    userAddress: PublicKey,
+    player: PublicKey
 ) => {
     const tx = await createClaimTx(
         userAddress,
+        player,
     );
     const txId = await provider.sendAndConfirm(tx, [], {
         commitment: "confirmed",
@@ -336,7 +338,7 @@ export const createPlayGameTx = async (userAddress: PublicKey, setNum: number, d
     return tx;
 }
 
-export const createClaimTx = async (userAddress: PublicKey) => {
+export const createClaimTx = async (userAddress: PublicKey, player: PublicKey) => {
 
     const [globalAuthority, bump] = await PublicKey.findProgramAddress(
         [Buffer.from(GLOBAL_AUTHORITY_SEED)],
@@ -350,7 +352,7 @@ export const createClaimTx = async (userAddress: PublicKey) => {
     );
 
     let playerPoolKey = await PublicKey.createWithSeed(
-        userAddress,
+        player,
         "player-pool",
         program.programId,
     );
@@ -361,7 +363,8 @@ export const createClaimTx = async (userAddress: PublicKey) => {
     tx.add(program.instruction.claimReward(
         {
         accounts: {
-            owner: userAddress,
+            payer: userAddress,
+            player,
             playerPool: playerPoolKey,
             globalAuthority,
             rewardVault: rewardVault,
