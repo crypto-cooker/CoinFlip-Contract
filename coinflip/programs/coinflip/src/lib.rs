@@ -78,16 +78,16 @@ pub mod coinflip {
             GameError::NeedClaimPendingReward
         );
 
+        // msg!(
+        //     "Vault: {}",
+        //     ctx.accounts.reward_vault.to_account_info().key()
+        // );
         msg!(
-            "Vault: {}",
-            ctx.accounts.reward_vault.to_account_info().key()
-        );
-        msg!(
-            "Lamports: {}",
+            "Vault Balance: {}",
             ctx.accounts.reward_vault.to_account_info().lamports()
         );
         msg!(
-            "Owner Lamports: {}",
+            "Owner Balance: {}",
             ctx.accounts.owner.to_account_info().lamports()
         );
         require!(
@@ -128,7 +128,7 @@ pub mod coinflip {
         let mut reward: u64 = 0;
         let timestamp = Clock::get()?.unix_timestamp;
         let slot = Clock::get()?.slot;
-        msg!("Slot number: {}", slot);
+        // msg!("Slot number: {}", slot);
 
         // Compare random number and set_number
         // if slot as u64 % 2 == set_number && (deposit == BET_AMOUNT_FIRST || deposit == BET_AMOUNT_SECOND) && (slot as u64 / 2) % 10 != 9 {
@@ -156,7 +156,8 @@ pub mod coinflip {
 
         global_authority.total_round += 1;
 
-        // if reward > 0 {
+        if reward > 0 {
+            msg!("Result: win");
         //     let vault_bump = *ctx.bumps.get("reward_vault").unwrap();
         //     // Transfer SOL to the winner from the PDA
         //     sol_transfer_with_signer(
@@ -168,7 +169,9 @@ pub mod coinflip {
         //     )?;
         //     // player_pool.game_data.reward_amount = 0;
         //     // player_pool.claimable_reward = 0;
-        // }
+        } else {
+            msg!("Result: lose");
+        }
 
         Ok(())
     }
