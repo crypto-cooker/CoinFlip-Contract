@@ -70,6 +70,12 @@ export type Coinflip = {
       ],
       "args": [
         {
+          "name": "newAdmin",
+          "type": {
+            "option": "publicKey"
+          }
+        },
+        {
           "name": "loyaltyFee",
           "type": "u64"
         }
@@ -114,14 +120,6 @@ export type Coinflip = {
       ],
       "args": [
         {
-          "name": "globalBump",
-          "type": "u8"
-        },
-        {
-          "name": "vaultBump",
-          "type": "u8"
-        },
-        {
           "name": "setNumber",
           "type": "u64"
         },
@@ -138,9 +136,14 @@ export type Coinflip = {
       ],
       "accounts": [
         {
-          "name": "owner",
+          "name": "payer",
           "isMut": true,
           "isSigner": true
+        },
+        {
+          "name": "player",
+          "isMut": true,
+          "isSigner": false
         },
         {
           "name": "playerPool",
@@ -163,16 +166,7 @@ export type Coinflip = {
           "isSigner": false
         }
       ],
-      "args": [
-        {
-          "name": "globalBump",
-          "type": "u8"
-        },
-        {
-          "name": "vaultBump",
-          "type": "u8"
-        }
-      ]
+      "args": []
     },
     {
       "name": "withdraw",
@@ -202,14 +196,6 @@ export type Coinflip = {
         }
       ],
       "args": [
-        {
-          "name": "globalBump",
-          "type": "u8"
-        },
-        {
-          "name": "vaultBump",
-          "type": "u8"
-        },
         {
           "name": "amount",
           "type": "u64"
@@ -266,7 +252,7 @@ export type Coinflip = {
             "type": "u64"
           },
           {
-            "name": "reveivedReward",
+            "name": "receivedReward",
             "type": "u64"
           },
           {
@@ -320,18 +306,38 @@ export type Coinflip = {
     },
     {
       "code": 6002,
+      "name": "InvalidClaim",
+      "msg": "Invalid Claim to Withdraw Reward"
+    },
+    {
+      "code": 6003,
       "name": "InvalidRewardVault",
       "msg": "Invalid Reward Vault to receive"
     },
     {
-      "code": 6003,
+      "code": 6004,
       "name": "InsufficientRewardVault",
       "msg": "Insufficient Reward SOL Balance"
     },
     {
-      "code": 6004,
+      "code": 6005,
       "name": "InsufficientUserBalance",
       "msg": "Insufficient User SOL Balance"
+    },
+    {
+      "code": 6006,
+      "name": "InvalidDeposit",
+      "msg": "Invalid Deposit Amount"
+    },
+    {
+      "code": 6007,
+      "name": "NoPendingRewardExist",
+      "msg": "There is no pending reward by played round"
+    },
+    {
+      "code": 6008,
+      "name": "NeedClaimPendingReward",
+      "msg": "Should claim pending reward before play new round"
     }
   ]
 };
@@ -408,6 +414,12 @@ export const IDL: Coinflip = {
       ],
       "args": [
         {
+          "name": "newAdmin",
+          "type": {
+            "option": "publicKey"
+          }
+        },
+        {
           "name": "loyaltyFee",
           "type": "u64"
         }
@@ -452,14 +464,6 @@ export const IDL: Coinflip = {
       ],
       "args": [
         {
-          "name": "globalBump",
-          "type": "u8"
-        },
-        {
-          "name": "vaultBump",
-          "type": "u8"
-        },
-        {
           "name": "setNumber",
           "type": "u64"
         },
@@ -476,9 +480,14 @@ export const IDL: Coinflip = {
       ],
       "accounts": [
         {
-          "name": "owner",
+          "name": "payer",
           "isMut": true,
           "isSigner": true
+        },
+        {
+          "name": "player",
+          "isMut": true,
+          "isSigner": false
         },
         {
           "name": "playerPool",
@@ -501,16 +510,7 @@ export const IDL: Coinflip = {
           "isSigner": false
         }
       ],
-      "args": [
-        {
-          "name": "globalBump",
-          "type": "u8"
-        },
-        {
-          "name": "vaultBump",
-          "type": "u8"
-        }
-      ]
+      "args": []
     },
     {
       "name": "withdraw",
@@ -540,14 +540,6 @@ export const IDL: Coinflip = {
         }
       ],
       "args": [
-        {
-          "name": "globalBump",
-          "type": "u8"
-        },
-        {
-          "name": "vaultBump",
-          "type": "u8"
-        },
         {
           "name": "amount",
           "type": "u64"
@@ -604,7 +596,7 @@ export const IDL: Coinflip = {
             "type": "u64"
           },
           {
-            "name": "reveivedReward",
+            "name": "receivedReward",
             "type": "u64"
           },
           {
@@ -658,18 +650,38 @@ export const IDL: Coinflip = {
     },
     {
       "code": 6002,
+      "name": "InvalidClaim",
+      "msg": "Invalid Claim to Withdraw Reward"
+    },
+    {
+      "code": 6003,
       "name": "InvalidRewardVault",
       "msg": "Invalid Reward Vault to receive"
     },
     {
-      "code": 6003,
+      "code": 6004,
       "name": "InsufficientRewardVault",
       "msg": "Insufficient Reward SOL Balance"
     },
     {
-      "code": 6004,
+      "code": 6005,
       "name": "InsufficientUserBalance",
       "msg": "Insufficient User SOL Balance"
+    },
+    {
+      "code": 6006,
+      "name": "InvalidDeposit",
+      "msg": "Invalid Deposit Amount"
+    },
+    {
+      "code": 6007,
+      "name": "NoPendingRewardExist",
+      "msg": "There is no pending reward by played round"
+    },
+    {
+      "code": 6008,
+      "name": "NeedClaimPendingReward",
+      "msg": "Should claim pending reward before play new round"
     }
   ]
 };
