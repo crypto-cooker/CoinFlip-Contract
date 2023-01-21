@@ -20,4 +20,6 @@ pub enum GameError {
     NoPendingRewardExist,
     #[msg("Should claim pending reward before play new round")]
     NeedClaimPendingReward,
+    #[msg("Not allowed Token Mint")]
+    InvalidTokenMint,
 }

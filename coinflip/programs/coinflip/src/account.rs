@@ -1,13 +1,19 @@
 use anchor_lang::prelude::*;
 
-
 #[account]
 #[derive(Default)]
 pub struct GlobalPool {
-    pub super_admin: Pubkey,        // 32
-    pub loyalty_wallet: Pubkey,     // 32
-    pub loyalty_fee: u64,           // 8
-    pub total_round: u64,           // 8
+    pub super_admin: Pubkey,    // 32
+    pub loyalty_wallet: Pubkey, // 32
+    pub loyalty_fee: u64,       // 8
+    pub total_round: u64,       // 8
+}
+
+#[account]
+#[derive(Default)]
+pub struct TokenInfo {
+    pub mint: Pubkey, // 32
+    pub allowed: u64, // 8
 }
 
 #[zero_copy]
@@ -24,12 +30,12 @@ pub struct GameData {
 #[account(zero_copy)]
 pub struct PlayerPool {
     // 112
-    pub player: Pubkey,       // 32
-    pub round: u64,           // 8
-    pub game_data: GameData,  // 40
-    pub win_times: u64,       // 8
-    pub received_reward: u64, // 8
-    pub claimable_reward: u64,// 8
+    pub player: Pubkey,        // 32
+    pub round: u64,            // 8
+    pub game_data: GameData,   // 40
+    pub win_times: u64,        // 8
+    pub received_reward: u64,  // 8
+    pub claimable_reward: u64, // 8
 }
 
 impl Default for PlayerPool {
@@ -47,7 +53,7 @@ impl Default for PlayerPool {
             },
             win_times: 0,
             received_reward: 0,
-            claimable_reward: 0
+            claimable_reward: 0,
         }
     }
 }
@@ -60,7 +66,7 @@ impl PlayerPool {
         self.game_data.set_num = num;
         self.game_data.rand = rand;
         self.round += 1;
-        self.claimable_reward = 1;
+        self.claimable_reward += reward;
         if reward > 0 {
             self.win_times += 1;
             self.received_reward += reward;

@@ -8,6 +8,11 @@ export interface GlobalPool {
     totalRound: anchor.BN,      // 8
 }
 
+export interface TokenInfo {
+    mint: PublicKey,      // 32
+    allowed: anchor.BN,      // 8
+}
+
 export interface AccountData {
     name: String,
     nftMint: PublicKey,
