@@ -70,8 +70,8 @@ const main = async () => {
     // await withDraw(payer.publicKey, 0.5);
 
     // await initTokenInfo(GRIND_MINT);
-    await playGameWithToken(provider.publicKey, GRIND_MINT, 0, 1 * 1e6);
-    await claimWithToken(provider.publicKey, new PublicKey('Am9xhPPVCfDZFDabcGgmQ8GTMdsbqEt1qVXbyhTxybAp'), GRIND_MINT);
+    // await playGameWithToken(provider.publicKey, GRIND_MINT, 0, 1 * 1e6);
+    await claimWithToken(provider.publicKey, new PublicKey('51QHr8aS4En232fPCWUYLxWYw4crwxeap56n4jF1283Y'), GRIND_MINT);
     // await disableToken(GRIND_MINT);
     // await enableToken(GRIND_MINT);
 
@@ -679,7 +679,7 @@ export const createClaimWithTokenTx = async (userAddress: PublicKey, player: Pub
         program.programId
     );
 
-    const userTokenAccount = await getAssociatedTokenAccount(userAddress, mint);
+    const userTokenAccount = await getAssociatedTokenAccount(player, mint);
 
     let tx = new Transaction();
 

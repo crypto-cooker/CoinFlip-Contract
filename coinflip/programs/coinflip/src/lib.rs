@@ -807,7 +807,7 @@ pub struct ClaimRewardWithToken<'info> {
         init_if_needed,
         payer = payer,
         associated_token::mint = mint,
-        associated_token::authority = payer
+        associated_token::authority = player
     )]
     pub user_token_account: Box<Account<'info, TokenAccount>>,
 
