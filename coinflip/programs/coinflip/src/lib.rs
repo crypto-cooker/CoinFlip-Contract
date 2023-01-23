@@ -294,7 +294,7 @@ pub mod coinflip {
         );
 
         require!(
-            ctx.accounts.reward_vault.to_account_info().lamports() > 2 * deposit,
+            ctx.accounts.reward_vault.amount > 2 * deposit,
             GameError::InsufficientRewardVault
         );
 
