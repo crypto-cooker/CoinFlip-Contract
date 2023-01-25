@@ -1,7 +1,7 @@
 use anchor_lang::{prelude::*, AnchorDeserialize};
 use anchor_spl::{
     associated_token::AssociatedToken,
-    token::{self, Mint, Token, TokenAccount, Transfer},
+    token::{Mint, Token, TokenAccount, Transfer},
 };
 use solana_program::pubkey::Pubkey;
 
@@ -747,8 +747,7 @@ pub struct PlayRoundWithToken<'info> {
     pub reward_vault: Box<Account<'info, TokenAccount>>,
 
     #[account(
-        init_if_needed,
-        payer = owner,
+        mut,
         associated_token::mint = mint,
         associated_token::authority = owner
     )]
@@ -761,7 +760,7 @@ pub struct PlayRoundWithToken<'info> {
         init_if_needed,
         payer = loyalty_wallet,
         associated_token::mint = mint,
-        associated_token::authority = loyalty_wallet
+        associated_token::authority = owner
     )]
     pub loyalty_token_account: Box<Account<'info, TokenAccount>>,
 
