@@ -758,9 +758,9 @@ pub struct PlayRoundWithToken<'info> {
 
     #[account(
         init_if_needed,
-        payer = loyalty_wallet,
+        payer = owner,
         associated_token::mint = mint,
-        associated_token::authority = owner
+        associated_token::authority = loyalty_wallet
     )]
     pub loyalty_token_account: Box<Account<'info, TokenAccount>>,
 
