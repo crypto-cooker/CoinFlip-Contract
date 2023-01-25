@@ -8,3 +8,4 @@ release/
 target/bpfel-unknown-unknown
 debug/
 /**/target/rls
+target/*.*
