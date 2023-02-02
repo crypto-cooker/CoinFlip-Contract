@@ -37,3 +37,21 @@ pub fn puffed_out_string(s: &String, size: usize) -> String {
     }
     s.clone() + std::str::from_utf8(&array_of_zeroes).unwrap()
 }
+
+pub fn get_random(timestamp: &i64, slot: &u64) -> u64 {
+    // Get the random number of the entrant amount
+    let (player_address, _bump) = Pubkey::find_program_address(
+        &[
+            "rand-seed".as_bytes(),
+            timestamp.to_string().as_bytes(),
+        ],
+        &crate::ID,
+    );
+    let char_vec: Vec<char> = player_address.to_string().chars().collect();
+    let mut mul = 1;
+    for i in 0..7 {
+        mul += u64::from(char_vec[i as usize]);
+    }
+    mul += slot;
+    mul % 2
+}

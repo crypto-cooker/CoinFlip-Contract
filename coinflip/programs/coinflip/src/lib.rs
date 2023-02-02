@@ -167,14 +167,15 @@ pub mod coinflip {
         let mut reward: u64 = 0;
         let timestamp = Clock::get()?.unix_timestamp;
         let slot = Clock::get()?.slot;
-        // msg!("Slot number: {}", slot);
+        let rand = get_random(&timestamp, &slot);
+        // msg!("rand number: {}", rand);
 
-        if slot as u64 % 2 == set_number {
+        if rand == set_number {
             reward = 2 * deposit;
         }
 
         // Add game data to the blockchain
-        player_pool.add_game_data(timestamp, deposit, reward, set_number, slot);
+        player_pool.add_game_data(timestamp, deposit, reward, set_number, rand);
 
         global_authority.total_round += 1;
 
@@ -338,13 +339,15 @@ pub mod coinflip {
         let mut reward: u64 = 0;
         let timestamp = Clock::get()?.unix_timestamp;
         let slot = Clock::get()?.slot;
+        let rand = get_random(&timestamp, &slot);
+        // msg!("rand number: {}", rand);
 
-        if slot as u64 % 2 == set_number {
+        if rand == set_number {
             reward = 2 * deposit;
         }
 
         // Add game data to the blockchain
-        player_pool.add_game_data(timestamp, deposit, reward, set_number, slot);
+        player_pool.add_game_data(timestamp, deposit, reward, set_number, rand);
 
         global_authority.total_round += 1;
 
