@@ -733,5 +733,8 @@
       "name": "InvalidTokenMint",
       "msg": "Not allowed Token Mint"
     }
-  ]
+  ],
+  "metadata": {
+    "address": "7ttfENVhNwb21KjZiLHgXLsX2sC1rKoJgnTVL4wb54t1"
+  }
 }

@@ -16,15 +16,15 @@ import { IDL as GameIDL } from "../target/types/coinflip";
 import { bs58 } from '@project-serum/anchor/dist/cjs/utils/bytes';
 import { ASSOCIATED_PROGRAM_ID, TOKEN_PROGRAM_ID } from '@project-serum/anchor/dist/cjs/utils/token';
 
-const PLAYER_POOL_SIZE = 112;
+export const PLAYER_POOL_SIZE = 112;
 const LAMPORTS = 1000000000;
-const GLOBAL_AUTHORITY_SEED = "global-authority";
-const VAULT_AUTHORITY_SEED = "vault-authority";
-const TOKEN_INFO_SEED = "token-info";
+export const GLOBAL_AUTHORITY_SEED = "global-authority";
+export const VAULT_AUTHORITY_SEED = "vault-authority";
+export const TOKEN_INFO_SEED = "token-info";
 const NONCE = "4QUPibxi";
 
-const PROGRAM_ID = "7ttfENVhNwb21KjZiLHgXLsX2sC1rKoJgnTVL4wb54t1";
-const GRIND_MINT = new PublicKey("grnd8GAcyi7MgEdwNJ7qx6kFHbsxfeTsPKysjbyXBHk");
+export const PROGRAM_ID = "7ttfENVhNwb21KjZiLHgXLsX2sC1rKoJgnTVL4wb54t1";
+export const GRIND_MINT = new PublicKey("grnd8GAcyi7MgEdwNJ7qx6kFHbsxfeTsPKysjbyXBHk");
 
 // Set the initial program and provider
 let program: Program = null;
@@ -921,7 +921,7 @@ export const getDataFromSignature = async (sig: string) => {
     return result;
 };
 
-const getAssociatedTokenAccount = async (ownerPubkey: PublicKey, mintPk: PublicKey): Promise<PublicKey> => {
+export const getAssociatedTokenAccount = async (ownerPubkey: PublicKey, mintPk: PublicKey): Promise<PublicKey> => {
     let associatedTokenAccountPubkey = (await PublicKey.findProgramAddress(
         [
             ownerPubkey.toBuffer(),
@@ -932,5 +932,3 @@ const getAssociatedTokenAccount = async (ownerPubkey: PublicKey, mintPk: PublicK
     ))[0];
     return associatedTokenAccountPubkey;
 }
-
-main();
