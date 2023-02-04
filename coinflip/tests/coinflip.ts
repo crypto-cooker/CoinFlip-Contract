@@ -69,9 +69,9 @@ describe("===> First 1000 testing", () => {
     const playerStatus = await getPlayerStatus(payer, program as Program);
     assert.equal(playerStatus.round, 500 * 2);
     colorPrint(`==> Win times: ${playerStatus.winTimes - lastWinTimes} / 500`, ColorType.FgMagenta);
-
+    
+    await dump(`Try Wipeout 500 times: win - ${playerStatus.winTimes - lastWinTimes}, lose - ${500 + lastWinTimes - playerStatus.winTimes}, duration - ${(endAt.getTime() - startedAt.getTime()) / 1000}s, startedAt - ${startedAt.toLocaleString()} \r\n`);
     lastWinTimes = playerStatus.winTimes;
-    await dump(`Try Kickflip 500 times: win - ${playerStatus.winTimes - lastWinTimes}, lose - ${500 + lastWinTimes - playerStatus.winTimes}, duration - ${(endAt.getTime() - startedAt.getTime()) / 1000}s, startedAt - ${startedAt.toLocaleString()} \r\n`);
   });
 });
 
@@ -88,11 +88,11 @@ describe("===> Second 1000 testing", () => {
     colorPrint(`Ended at ${endAt.toLocaleString()}`, ColorType.FgGreen);
 
     const playerStatus = await getPlayerStatus(payer, program as Program);
-    assert.equal(playerStatus.round, 500);
+    assert.equal(playerStatus.round, 500 * 3);
     colorPrint(`==> Win times: ${playerStatus.winTimes - lastWinTimes} / 500`, ColorType.FgMagenta);
 
-    lastWinTimes = playerStatus.winTimes;
     await dump(`Try Kickflip 500 times: win - ${playerStatus.winTimes - lastWinTimes}, lose - ${500 + lastWinTimes - playerStatus.winTimes}, duration - ${(endAt.getTime() - startedAt.getTime()) / 1000}s, startedAt - ${startedAt.toLocaleString()} \r\n`);
+    lastWinTimes = playerStatus.winTimes;
   });
 
   it("Play wipeout 500 times!", async () => {
@@ -107,11 +107,11 @@ describe("===> Second 1000 testing", () => {
     colorPrint(`Ended at ${endAt.toLocaleString()}`, ColorType.FgGreen);
 
     const playerStatus = await getPlayerStatus(payer, program as Program);
-    assert.equal(playerStatus.round, 500 * 2);
+    assert.equal(playerStatus.round, 500 * 4);
     colorPrint(`==> Win times: ${playerStatus.winTimes - lastWinTimes} / 500`, ColorType.FgMagenta);
 
+    await dump(`Try Wipeout 500 times: win - ${playerStatus.winTimes - lastWinTimes}, lose - ${500 + lastWinTimes - playerStatus.winTimes}, duration - ${(endAt.getTime() - startedAt.getTime()) / 1000}s, startedAt - ${startedAt.toLocaleString()} \r\n`);
     lastWinTimes = playerStatus.winTimes;
-    await dump(`Try Kickflip 500 times: win - ${playerStatus.winTimes - lastWinTimes}, lose - ${500 + lastWinTimes - playerStatus.winTimes}, duration - ${(endAt.getTime() - startedAt.getTime()) / 1000}s, startedAt - ${startedAt.toLocaleString()} \r\n`);
   });
 });
 
@@ -128,11 +128,11 @@ describe("===> Third 1000 testing", () => {
     colorPrint(`Ended at ${endAt.toLocaleString()}`, ColorType.FgGreen);
 
     const playerStatus = await getPlayerStatus(payer, program as Program);
-    assert.equal(playerStatus.round, 500);
+    assert.equal(playerStatus.round, 500 * 5);
     colorPrint(`==> Win times: ${playerStatus.winTimes - lastWinTimes} / 500`, ColorType.FgMagenta);
 
-    lastWinTimes = playerStatus.winTimes;
     await dump(`Try Kickflip 500 times: win - ${playerStatus.winTimes - lastWinTimes}, lose - ${500 + lastWinTimes - playerStatus.winTimes}, duration - ${(endAt.getTime() - startedAt.getTime()) / 1000}s, startedAt - ${startedAt.toLocaleString()} \r\n`);
+    lastWinTimes = playerStatus.winTimes;
   });
 
   it("Play wipeout 500 times!", async () => {
@@ -147,11 +147,11 @@ describe("===> Third 1000 testing", () => {
     colorPrint(`Ended at ${endAt.toLocaleString()}`, ColorType.FgGreen);
 
     const playerStatus = await getPlayerStatus(payer, program as Program);
-    assert.equal(playerStatus.round, 500 * 2);
+    assert.equal(playerStatus.round, 500 * 6);
     colorPrint(`==> Win times: ${playerStatus.winTimes - lastWinTimes} / 500`, ColorType.FgMagenta);
 
+    await dump(`Try Wipeout 500 times: win - ${playerStatus.winTimes - lastWinTimes}, lose - ${500 + lastWinTimes - playerStatus.winTimes}, duration - ${(endAt.getTime() - startedAt.getTime()) / 1000}s, startedAt - ${startedAt.toLocaleString()} \r\n`);
     lastWinTimes = playerStatus.winTimes;
-    await dump(`Try Kickflip 500 times: win - ${playerStatus.winTimes - lastWinTimes}, lose - ${500 + lastWinTimes - playerStatus.winTimes}, duration - ${(endAt.getTime() - startedAt.getTime()) / 1000}s, startedAt - ${startedAt.toLocaleString()} \r\n`);
   });
 });
 describe("===> Fourth 1000 testing", () => {
@@ -167,11 +167,11 @@ describe("===> Fourth 1000 testing", () => {
     colorPrint(`Ended at ${endAt.toLocaleString()}`, ColorType.FgGreen);
 
     const playerStatus = await getPlayerStatus(payer, program as Program);
-    assert.equal(playerStatus.round, 500);
+    assert.equal(playerStatus.round, 500 * 7);
     colorPrint(`==> Win times: ${playerStatus.winTimes - lastWinTimes} / 500`, ColorType.FgMagenta);
 
-    lastWinTimes = playerStatus.winTimes;
     await dump(`Try Kickflip 500 times: win - ${playerStatus.winTimes - lastWinTimes}, lose - ${500 + lastWinTimes - playerStatus.winTimes}, duration - ${(endAt.getTime() - startedAt.getTime()) / 1000}s, startedAt - ${startedAt.toLocaleString()} \r\n`);
+    lastWinTimes = playerStatus.winTimes;
   });
 
   it("Play wipeout 500 times!", async () => {
@@ -186,11 +186,11 @@ describe("===> Fourth 1000 testing", () => {
     colorPrint(`Ended at ${endAt.toLocaleString()}`, ColorType.FgGreen);
 
     const playerStatus = await getPlayerStatus(payer, program as Program);
-    assert.equal(playerStatus.round, 500 * 2);
+    assert.equal(playerStatus.round, 500 * 8);
     colorPrint(`==> Win times: ${playerStatus.winTimes - lastWinTimes} / 500`, ColorType.FgMagenta);
 
+    await dump(`Try Wipeout 500 times: win - ${playerStatus.winTimes - lastWinTimes}, lose - ${500 + lastWinTimes - playerStatus.winTimes}, duration - ${(endAt.getTime() - startedAt.getTime()) / 1000}s, startedAt - ${startedAt.toLocaleString()} \r\n`);
     lastWinTimes = playerStatus.winTimes;
-    await dump(`Try Kickflip 500 times: win - ${playerStatus.winTimes - lastWinTimes}, lose - ${500 + lastWinTimes - playerStatus.winTimes}, duration - ${(endAt.getTime() - startedAt.getTime()) / 1000}s, startedAt - ${startedAt.toLocaleString()} \r\n`);
   });
 });
 describe("===> Fifth 1000 testing", () => {
@@ -206,11 +206,11 @@ describe("===> Fifth 1000 testing", () => {
     colorPrint(`Ended at ${endAt.toLocaleString()}`, ColorType.FgGreen);
 
     const playerStatus = await getPlayerStatus(payer, program as Program);
-    assert.equal(playerStatus.round, 500);
+    assert.equal(playerStatus.round, 500 * 9);
     colorPrint(`==> Win times: ${playerStatus.winTimes - lastWinTimes} / 500`, ColorType.FgMagenta);
 
-    lastWinTimes = playerStatus.winTimes;
     await dump(`Try Kickflip 500 times: win - ${playerStatus.winTimes - lastWinTimes}, lose - ${500 + lastWinTimes - playerStatus.winTimes}, duration - ${(endAt.getTime() - startedAt.getTime()) / 1000}s, startedAt - ${startedAt.toLocaleString()} \r\n`);
+    lastWinTimes = playerStatus.winTimes;
   });
 
   it("Play wipeout 500 times!", async () => {
@@ -225,10 +225,10 @@ describe("===> Fifth 1000 testing", () => {
     colorPrint(`Ended at ${endAt.toLocaleString()}`, ColorType.FgGreen);
 
     const playerStatus = await getPlayerStatus(payer, program as Program);
-    assert.equal(playerStatus.round, 500 * 2);
+    assert.equal(playerStatus.round, 500 * 10);
     colorPrint(`==> Win times: ${playerStatus.winTimes - lastWinTimes} / 500`, ColorType.FgMagenta);
 
+    await dump(`Try Wipeout 500 times: win - ${playerStatus.winTimes - lastWinTimes}, lose - ${500 + lastWinTimes - playerStatus.winTimes}, duration - ${(endAt.getTime() - startedAt.getTime()) / 1000}s, startedAt - ${startedAt.toLocaleString()} \r\n`);
     lastWinTimes = playerStatus.winTimes;
-    await dump(`Try Kickflip 500 times: win - ${playerStatus.winTimes - lastWinTimes}, lose - ${500 + lastWinTimes - playerStatus.winTimes}, duration - ${(endAt.getTime() - startedAt.getTime()) / 1000}s, startedAt - ${startedAt.toLocaleString()} \r\n`);
   });
 });
